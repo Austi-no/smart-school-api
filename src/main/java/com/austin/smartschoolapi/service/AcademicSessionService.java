@@ -25,6 +25,7 @@ public class AcademicSessionService {
             return ResponseEntity.ok(new ApiResponse<>(CustomMessages.Failed, session.getSession() + " Already Exist!"));
         }
         session.setDateCreated(new Date());
+        session.setIsActive(false);
         academicSessionRepository.save(session);
         return ResponseEntity.ok(new ApiResponse<>(CustomMessages.Success, session.getSession() + " Session Created Successfully!"));
     }
@@ -59,6 +60,29 @@ public class AcademicSessionService {
         if (optionalSession.isPresent()) {
             academicSessionRepository.deleteById(id);
             return ResponseEntity.ok(new ApiResponse<>(CustomMessages.Deleted, optionalSession.get().getSession() + "Session has been Deleted!"));
+        }
+        return ResponseEntity.ok(new ApiResponse<>(CustomMessages.Failed, "Session was not Found!"));
+    }
+
+    public ResponseEntity getCurrentSession() {
+        List<AcademicSession> academicSessionList = academicSessionRepository.findAll();
+
+        return ResponseEntity.ok(new ApiResponse<>(CustomMessages.Success, academicSessionList.stream().filter(x -> x.getIsActive() == true)));
+    }
+
+
+    public ResponseEntity changeStatus(Long sessionId, Boolean isActive) {
+        Optional<AcademicSession> optionalSession = academicSessionRepository.findById(sessionId);
+        if (optionalSession.isPresent()) {
+            optionalSession.get().setIsActive(isActive);
+            AcademicSession updatedSession = academicSessionRepository.save(optionalSession.get());
+            if (updatedSession.getIsActive() == true) {
+                return ResponseEntity.ok(new ApiResponse<>(CustomMessages.Success, optionalSession.get().getSession() + " status has been enabled!"));
+            }
+            if (updatedSession.getIsActive() == false) {
+                return ResponseEntity.ok(new ApiResponse<>(CustomMessages.Success, optionalSession.get().getSession() + " status has been Disabled!"));
+            }
+
         }
         return ResponseEntity.ok(new ApiResponse<>(CustomMessages.Failed, "Session was not Found!"));
     }

@@ -19,6 +19,9 @@ public class AcademicSession implements Serializable {
     @Column(name = "session")
     private String session;
 
+    @Column(name = "active")
+    private Boolean isActive;
+
     @Column(name = "date_created")
     private Date dateCreated;
 

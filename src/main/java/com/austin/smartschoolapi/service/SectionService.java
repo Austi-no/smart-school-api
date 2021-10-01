@@ -23,6 +23,7 @@ public class SectionService {
         if (optionalSection.isPresent()) {
             return ResponseEntity.ok(new ApiResponse<>(CustomMessages.AlreadyExist, section.getSection() + " already exist for " + section.getAcademicSession().getSession()));
         }
+        section.setIsActive(false);
         section.setDateCreated(new Date());
         Section saveSection = repository.save(section);
         return ResponseEntity.ok(new ApiResponse<>(CustomMessages.Success, saveSection.getSection() + " Created Successfully for " + saveSection.getAcademicSession().getSession()));
@@ -62,5 +63,29 @@ public class SectionService {
             return ResponseEntity.ok(new ApiResponse<>(CustomMessages.Deleted, "Section has been Deleted Successfully!"));
         }
         return ResponseEntity.ok(new ApiResponse<>(CustomMessages.NotFound, "Section Record not Found!"));
+    }
+
+
+    public ResponseEntity getCurrentSection() {
+        List<Section> sectionList = repository.findAll();
+
+        return ResponseEntity.ok(new ApiResponse<>(CustomMessages.Success, sectionList.stream().filter(x -> x.getIsActive() == true)));
+    }
+
+
+    public ResponseEntity changeStatus(Long id, Boolean isActive) {
+        Optional<Section> optionalSection = repository.findById(id);
+        if (optionalSection.isPresent()) {
+            optionalSection.get().setIsActive(isActive);
+            Section updatedSection = repository.save(optionalSection.get());
+            if (updatedSection.getIsActive() == true) {
+                return ResponseEntity.ok(new ApiResponse<>(CustomMessages.Success, optionalSection.get().getSection() + " status has been enabled!"));
+            }
+            if (updatedSection.getIsActive() == false) {
+                return ResponseEntity.ok(new ApiResponse<>(CustomMessages.Success, optionalSection.get().getSection() + " status has been Disabled!"));
+            }
+
+        }
+        return ResponseEntity.ok(new ApiResponse<>(CustomMessages.Failed, "Section was not Found!"));
     }
 }

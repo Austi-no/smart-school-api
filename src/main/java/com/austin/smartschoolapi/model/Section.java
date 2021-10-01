@@ -9,7 +9,7 @@ import java.util.Date;
 @Entity
 @Table(name = "section")
 @Data
-public class Section  implements Serializable {
+public class Section implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,21 +18,21 @@ public class Section  implements Serializable {
     @Column(name = "section")
     private String section;
 
-    @Column(name ="start_date")
-    private  Date startDate;
+    @Column(name = "is_active")
+    private Boolean isActive;
 
-    @Column(name ="end_date")
-    private  Date endDate;
+    @Column(name = "start_date")
+    private Date startDate;
 
-    @Column(name ="date_created")
-    private  Date dateCreated;
+    @Column(name = "end_date")
+    private Date endDate;
+
+    @Column(name = "date_created")
+    private Date dateCreated;
 
     @JoinColumn(name = "academic_session", referencedColumnName = "id")
     @ManyToOne(cascade = {CascadeType.REFRESH})
     private AcademicSession academicSession;
-
-
-
 
 
 }

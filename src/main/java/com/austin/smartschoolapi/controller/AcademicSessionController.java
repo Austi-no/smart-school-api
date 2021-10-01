@@ -39,4 +39,15 @@ public class AcademicSessionController {
     public ResponseEntity deleteSession(@PathVariable("id") Long id) {
         return sessionService.deleteSession(id);
     }
+
+    @GetMapping("getCurrentSession")
+    public ResponseEntity getCurrentSession() {
+        return sessionService.getCurrentSession();
+    }
+
+    @PostMapping("changeStatus")
+    public ResponseEntity changeStatus(@RequestParam(value = "sessionId") Long sessionId, @RequestParam(value = "isActive") Boolean isActive) {
+        return sessionService.changeStatus(sessionId,isActive);
+    }
+
 }

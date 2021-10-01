@@ -39,4 +39,14 @@ public class SectionController {
     public ResponseEntity deleteSection(@PathVariable("id") Long id){
         return service.deleteSection(id);
     }
+
+    @GetMapping("getCurrentSection")
+    public ResponseEntity getCurrentSection() {
+        return service.getCurrentSection();
+    }
+
+    @PostMapping("changeStatus")
+    public ResponseEntity changeStatus(@RequestParam(value = "id") Long id, @RequestParam(value = "isActive") Boolean isActive) {
+        return service.changeStatus(id,isActive);
+    }
 }
